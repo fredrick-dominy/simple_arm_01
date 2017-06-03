@@ -27,19 +27,18 @@ def mover():
         elapsed = rospy.Time.now().to_sec() - start_time
 
         # The joint angles are sampled from a sine wave with a period of 10 seconds, and in magnitude from [-pi/2, +pi/2].
-        pub_j1.publish(math.sin(2*math.pi*0.1*elapsed))
-        pub_j2.publish(math.sin(2*math.pi*0.1*elapsed))
+        pub_j1.publish(math.sin(6*math.pi*0.1*elapsed))
+        pub_j2.publish(math.sin(6*math.pi*0.1*elapsed))
 
         # traverse loop at the specified 10Hz rate set above
         rate.sleep()
 
-    if __name__ == '__main__':
+# WATCH INDENTATION!!!!!!!!
+if __name__ == '__main__':
 
-        # rospy uses extensions extensively
-        # also cleanup functions will be here
-        try:
-            mover()
-        except rospy.ROSInterruptException:
-            pass
-
-
+    # rospy uses extensions extensively
+    # also cleanup functions will be here
+    try:
+        mover()
+    except rospy.ROSInterruptException:
+        pass
