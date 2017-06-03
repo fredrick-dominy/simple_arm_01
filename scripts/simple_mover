@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+
+import math
+import rospy
+# rospy is official client lib for ROS
+
+from std_msgs.msg import Float64
+# in std_msgs the Float64 package is one of the primitive message types
+
+def mover():
+    # declare 2 publishers joint one and two
+    pub_j1 = rospy.Publisher('/simple_arm/joint_1_position_controller/command', Float64, queue_size=10)
+    pub_j2 = rospy.Publisher('/simple_arm/joint_2_position_controller/command', Float64, queue_size=10)
+
+    # initialize the "arm_mover" node with master
+    rospy.init_node('arm_mover', anonymous=True)
+
+    # rate is in Hz - limit frequency at which the loop spin in ROS
+    # too much rate = high CPU.  too little = latency
+    rate = rospy.Rate(10)
+
+    start_time = 0
+    while not start_time:
+        start_time = rospy.Time.now().to_sec()
+
+    while not rospy.is_shutdown():
+        elapsed = rospy.Time.now().to_sec() - start_time
+
+        # The joint angles are sampled from a sine wave with a period of 10 seconds, and in magnitude from [-pi/2, +pi/2].
+        pub_j1.publish(math.sin(2*math.pi*0.1*elapsed))
+        pub_j2.publish(math.sin(2*math.pi*0.1*elapsed))
+
+        # traverse loop at the specified 10Hz rate set above
+        rate.sleep()
+
+    if __name__ == '__main__':
+
+        # rospy uses extensions extensively
+        # also cleanup functions will be here
+        try:
+            mover()
+        except rospy.ROSInterruptException:
+            pass
+
+
